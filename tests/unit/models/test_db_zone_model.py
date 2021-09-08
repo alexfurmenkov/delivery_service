@@ -1,8 +1,11 @@
 import uuid
 from decimal import Decimal
 
-from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.test import TestCase
+
+from delivery_service.models import DbZoneModel
+from tests.test_utils.test_records_pks import TEST_ZONE_PK
 
 
 class TestDbZoneModel(TestCase):
@@ -20,11 +23,8 @@ class TestDbZoneModel(TestCase):
         Test checks that a zone with the same coordinates cannot be created more than once.
         An existing zone is created by the fixture.
         """
-        with self.assertRaises(ValidationError):
-            longitude: Decimal = Decimal('20.4924')
-            latitude: Decimal = Decimal('54.7377')
-            zone_name: str = 'Test Zone'
-            DbZoneModel.objects.create(longitude=longitude, lattitude=latitude, name=zone_name)
+        with self.assertRaises(IntegrityError):
+            DbZoneModel.objects.create(longitude=self.zone.longitude, latitude=self.zone.latitude, name=self.zone.name)
 
     def test_update_zone(self):
         """

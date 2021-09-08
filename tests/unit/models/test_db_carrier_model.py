@@ -1,7 +1,10 @@
 import uuid
 
-from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.test import TestCase
+
+from delivery_service.models import DbCarrierModel, DbZoneModel
+from tests.test_utils.test_records_pks import TEST_CARRIER_PK, TEST_ZONE_PK
 
 
 class TestDbCarrierModel(TestCase):
@@ -19,30 +22,31 @@ class TestDbCarrierModel(TestCase):
         """
         Test checks that a carrier with the same nickname cannot be created more than once.
         """
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(IntegrityError):
             DbCarrierModel.objects.create(
+                zone=self.zone,
                 nickname=self.carrier.nickname,
-                name=self.carrier.name,
-                surname=self.carrier.surname,
-                age=self.carrier.age,
-                zone=self.zone
+                first_name=self.carrier.first_name,
+                last_name=self.carrier.last_name,
+                gender=self.carrier.gender,
+                age=self.carrier.age
             )
 
     def test_update_carrier(self):
         """
         Test ensures that only allowed fields of a carrier can be updated.
         """
-        new_nickname: str = 'test_nickname'
+        new_first_name: str = 'updated first name'
         new_age: int = 40
         new_id: uuid.UUID = uuid.uuid4()
 
         # check that the attributes of an object have changed
-        self.carrier.update_db_record({'nickname': new_nickname, 'age': new_age})
-        assert self.carrier.nickname == new_nickname
+        self.carrier.update_db_record({'first_name': new_first_name, 'age': new_age})
+        assert self.carrier.first_name == new_first_name
         assert self.carrier.age == new_age
         assert self.carrier.id != new_id
 
         # check that the DB record has been updated
         updated_carrier: DbCarrierModel = DbCarrierModel.objects.get(id=self.carrier.id)
-        assert updated_carrier.nickname == new_nickname
+        assert updated_carrier.first_name == new_first_name
         assert updated_carrier.age == new_age
