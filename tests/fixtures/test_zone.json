@@ -1,0 +1,13 @@
+[
+  {
+    "model": "delivery_service.dbzonemodel",
+    "pk": "3e165de9-d421-41eb-abf1-1e10214280f8",
+    "fields": {
+      "created_at": "2021-08-02T13:56:46.745Z",
+      "updated_at": null,
+      "longitude": "20.4924",
+      "latitude": "54.7377",
+      "name": "home"
+    }
+  }
+]

@@ -1,0 +1,16 @@
+[
+    {
+        "model": "delivery_service.dbcarriermodel",
+        "pk": "69ddda66-25af-4ee4-b481-7945b4f3b2ba",
+        "fields": {
+            "zone": "3e165de9-d421-41eb-abf1-1e10214280f8",
+            "nickname": "alexey",
+            "created_at": "2021-09-08T11:45:41.575Z",
+            "updated_at": null,
+            "first_name": "Alexey",
+            "last_name": "Furmenkov",
+            "gender": "male",
+            "age": 22
+        }
+    }
+]
