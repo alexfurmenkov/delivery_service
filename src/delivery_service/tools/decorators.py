@@ -1,5 +1,5 @@
 """
-This module contains decorators used in the meetups_backend project.
+This module contains decorators used in the project.
 """
 import functools
 

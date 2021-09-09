@@ -1,14 +1,18 @@
+"""
+Created response with 201 HTTP status is returned
+when a new resource has been created.
+"""
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 
 
 class ResponseCreated(Response):
     """
-    This class is a wrapper over the original response class.
+    The class defines concrete HTTP status and body.
     """
 
     def __init__(self, message: str, created_resource_id: str):
-        super(ResponseCreated, self).__init__(
+        super().__init__(
             status=HTTP_201_CREATED,
             data={
                 'status': 'success',

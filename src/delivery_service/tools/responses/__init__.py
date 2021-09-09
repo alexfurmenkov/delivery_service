@@ -1,3 +1,6 @@
+"""
+This module contains response wrappers that have predefined HTTP status and body.
+"""
 from .response_created import ResponseCreated
 from .response_bad_request import ResponseBadRequest
 from .response_validation_error import ResponseValidationError
