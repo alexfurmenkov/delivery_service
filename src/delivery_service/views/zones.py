@@ -14,7 +14,7 @@ from delivery_service.tools.responses import ResponseBadRequest, ResponseCreated
 
 class ZonesView(ViewSet):
     """
-    This class handles HTTP requests on "/users" endpoints
+    This class handles HTTP requests on "/zones/" endpoints
     """
     db_model_class = DbZoneModel
     serializer_class = DbZoneModelSerializer

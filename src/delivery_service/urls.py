@@ -12,8 +12,8 @@ from rest_framework.routers import DefaultRouter
 import delivery_service.views as delivery_service_views
 
 
-zones_router: DefaultRouter = DefaultRouter()
-zones_router.register(r'zones', delivery_service_views.ZonesView, basename='zones')
+router: DefaultRouter = DefaultRouter()
+router.register(r'zones', delivery_service_views.ZonesView, basename='zones')
+router.register(r'carriers', delivery_service_views.CarriersView, basename='carriers')
 
-
-urlpatterns: list = zones_router.urls
+urlpatterns: list = router.urls
