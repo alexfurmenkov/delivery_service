@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from delivery_service.models import DbZoneModel
+from delivery_service.serializers.request_serializers import CreateNewZoneSerializer
+from delivery_service.tools.decorators import request_validation
 from delivery_service.tools.responses import ResponseBadRequest, ResponseCreated
 
 
@@ -14,12 +16,13 @@ class ZonesView(ViewSet):
     """
     db_model_class = DbZoneModel
 
+    @request_validation(CreateNewZoneSerializer)
     def create(self, request: Request) -> Response:
         """
         Endpoint that creates a new zone.
         """
-        longitude: Decimal = request.data['longitude']
-        latitude: Decimal = request.data['latitude']
+        longitude: Decimal = Decimal(request.data['longitude'])
+        latitude: Decimal = Decimal(request.data['latitude'])
         name: str = request.data.get('name')  # name is optional
 
         if self.db_model_class.objects.filter(longitude=longitude, latitude=latitude).exists():
