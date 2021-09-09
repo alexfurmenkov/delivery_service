@@ -1,3 +1,6 @@
+"""
+This class represents a zone DB record.
+"""
 from django.db.models import DecimalField, CharField
 
 from .base_db_model import BaseDbModel
@@ -5,7 +8,8 @@ from .base_db_model import BaseDbModel
 
 class DbZoneModel(BaseDbModel):
     """
-    This class represents a zone DB record.
+    This class describes the implementation of the DB record:
+    its attributes, methods and table name.
     """
 
     class Meta:

@@ -1,6 +1,6 @@
 """
 Base model class for all models.
-Every new model has to be inherited from this class
+Every new model has to be inherited from this class.
 """
 import uuid
 from datetime import datetime

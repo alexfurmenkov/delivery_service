@@ -1,3 +1,6 @@
+"""
+This class represents a carrier DB record.
+"""
 from django.db.models import CharField, IntegerField, ForeignKey, CASCADE
 
 from .base_db_model import BaseDbModel
@@ -6,7 +9,8 @@ from .db_zone_model import DbZoneModel
 
 class DbCarrierModel(BaseDbModel):
     """
-    This class represents a carrier DB record.
+    This class describes the implementation of the DB record:
+    its attributes, methods and table name.
     """
 
     class Meta:
@@ -39,4 +43,4 @@ class DbCarrierModel(BaseDbModel):
         zone_id: str = update_body.get('zone', None)
         if zone_id:
             update_body['zone'] = DbZoneModel.objects.get(id=zone_id)
-        super(DbCarrierModel, self).update_db_record(update_body)
+        super().update_db_record(update_body)
