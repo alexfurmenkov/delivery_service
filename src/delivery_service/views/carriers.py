@@ -5,6 +5,7 @@ HTTP requests to "/carriers/" endpoints.
 from decimal import Decimal
 from typing import List
 
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -33,10 +34,17 @@ class CarriersView(ViewSet):
     db_model_class = DbCarrierModel
     serializer_class = DbCarrierModelSerializer
 
+    @swagger_auto_schema(
+        request_body=CreateNewCarrierSerializer,
+        responses={
+            '201': 'New carrier has been created successfully.',
+            '400': 'Carrier with given nickname already exists.',
+        }
+    )
     @request_validation(CreateNewCarrierSerializer)
     def create(self, request: Request) -> Response:
         """
-        Endpoint that creates a new zone.
+        Endpoint that creates a new carrier.
         """
         # ensure that there is no carrier with the same nickname
         nickname: str = request.data.pop('nickname')
@@ -55,6 +63,11 @@ class CarriersView(ViewSet):
             created_resource_id=new_carrier.id
         )
 
+    @swagger_auto_schema(
+        responses={
+            '200': 'Carriers have been listed successfully.',
+        }
+    )
     def list(self, request: Request) -> Response:
         """
         Endpoint that lists all carriers.
@@ -65,6 +78,12 @@ class CarriersView(ViewSet):
             response_data={'carriers': self.serializer_class(carriers, many=True).data}
         )
 
+    @swagger_auto_schema(
+        responses={
+            '200': 'Carrier has been retrieved successfully.',
+            '404': 'Carrier with given id is not found.',
+        }
+    )
     @ensure_existing_record(db_model_class)
     def retrieve(self, request: Request, pk=None) -> Response:
         """
@@ -76,6 +95,13 @@ class CarriersView(ViewSet):
             response_data={'carrier': self.serializer_class(carrier).data}
         )
 
+    @swagger_auto_schema(
+        query_serializer=SearchCarrierSerializer,
+        responses={
+            '200': 'Carriers have been found successfully.',
+            '404': 'Carriers are not found.',
+        }
+    )
     @request_validation(SearchCarrierSerializer)
     @action(detail=False, methods=['get'])
     def search(self, request: Request) -> Response:
@@ -84,8 +110,6 @@ class CarriersView(ViewSet):
         Accepts latitude and longitude in query params and returns carriers.
         One zone can be serviced by several carriers at the same time,
         so the endpoint returns a list of carriers.
-        :param request: HTTP request
-        :return: Response object
         """
         latitude: Decimal = Decimal(request.query_params['latitude'])
         longitude: Decimal = Decimal(request.query_params['longitude'])
@@ -105,6 +129,13 @@ class CarriersView(ViewSet):
             response_data={'carriers': self.serializer_class(carriers, many=True).data}
         )
 
+    @swagger_auto_schema(
+        request_body=UpdateCarrierSerializer,
+        responses={
+            '200': 'Carrier has been updated successfully.',
+            '404': 'Carrier with given id is not found.',
+        }
+    )
     @request_validation(UpdateCarrierSerializer)
     @ensure_existing_record(db_model_class)
     def update(self, request: Request, pk=None) -> Response:
@@ -120,6 +151,12 @@ class CarriersView(ViewSet):
             message=f'Carrier with id {pk} has been updated successfully.'
         )
 
+    @swagger_auto_schema(
+        responses={
+            '200': 'Carrier has been deleted successfully.',
+            '404': 'Carrier with given id is not found.',
+        }
+    )
     @ensure_existing_record(db_model_class)
     def destroy(self, request: Request, pk=None) -> Response:
         """

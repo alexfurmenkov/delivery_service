@@ -5,6 +5,7 @@ HTTP requests to "/zones/" endpoints.
 from decimal import Decimal
 from typing import List
 
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
@@ -33,6 +34,13 @@ class ZonesView(ViewSet):
     db_model_class = DbZoneModel
     serializer_class = DbZoneModelSerializer
 
+    @swagger_auto_schema(
+        request_body=CreateNewZoneSerializer,
+        responses={
+            '201': 'New zone has been created successfully.',
+            '400': 'Zone with given coordinates already exists.',
+        }
+    )
     @request_validation(CreateNewZoneSerializer)
     def create(self, request: Request) -> Response:
         """
@@ -57,6 +65,11 @@ class ZonesView(ViewSet):
             created_resource_id=new_zone.id
         )
 
+    @swagger_auto_schema(
+        responses={
+            '200': 'Zones have been listed successfully.',
+        }
+    )
     def list(self, request: Request) -> Response:
         """
         Endpoint that lists all zones.
@@ -67,6 +80,12 @@ class ZonesView(ViewSet):
             response_data={'zones': self.serializer_class(zones, many=True).data}
         )
 
+    @swagger_auto_schema(
+        responses={
+            '200': 'Zone has been retrieved successfully.',
+            '404': 'Zone with given id is not found.',
+        }
+    )
     @ensure_existing_record(db_model_class)
     def retrieve(self, request: Request, pk=None) -> Response:
         """
@@ -78,6 +97,13 @@ class ZonesView(ViewSet):
             response_data={'zone': self.serializer_class(zone).data}
         )
 
+    @swagger_auto_schema(
+        request_body=UpdateZoneSerializer,
+        responses={
+            '200': 'Zone has been updated successfully.',
+            '404': 'Zone with given id is not found.',
+        }
+    )
     @request_validation(UpdateZoneSerializer)
     @ensure_existing_record(db_model_class)
     def update(self, request: Request, pk=None) -> Response:
@@ -88,6 +114,12 @@ class ZonesView(ViewSet):
         zone_to_update.update_db_record(request.data)
         return ResponseSuccess(f'Zone with id {pk} has been updated successfully.')
 
+    @swagger_auto_schema(
+        responses={
+            '200': 'Zone has been deleted successfully.',
+            '404': 'Zone with given id is not found.',
+        }
+    )
     @ensure_existing_record(db_model_class)
     def destroy(self, request: Request, pk=None) -> Response:
         """

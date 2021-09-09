@@ -23,7 +23,7 @@ router.register(r'carriers', delivery_service_views.CarriersView, basename='carr
 schema_view = get_schema_view(
    openapi.Info(title='Delivery Service API', default_version='v1'),
    public=True,
-   permission_classes=[permissions.AllowAny],
+   permission_classes=(permissions.AllowAny, ),
 )
 
 urlpatterns = [
