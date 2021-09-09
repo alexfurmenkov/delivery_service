@@ -75,7 +75,7 @@ class ZonesView(ViewSet):
         """
         Endpoint that deletes a zone.
         """
-        # delete the post
+        # delete the carrier
         zone_to_delete: DbZoneModel = self.db_model_class.objects.get(id=pk)
         zone_to_delete.delete()
 

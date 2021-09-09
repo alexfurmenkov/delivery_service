@@ -73,3 +73,15 @@ class CarriersView(ViewSet):
 
         # return successful response
         return ResponseSuccess(message=f'Carrier with id {pk} has been updated successfully.')
+
+    @ensure_existing_record(db_model_class)
+    def destroy(self, request: Request, pk=None) -> Response:
+        """
+        Endpoint that deletes a carrier.
+        """
+        # delete the carrier
+        carrier_to_delete: DbCarrierModel = self.db_model_class.objects.get(id=pk)
+        carrier_to_delete.delete()
+
+        # return successful response
+        return ResponseSuccess(message=f'Carrier with id {pk} has been deleted successfully.')
