@@ -13,16 +13,17 @@ class TestCreateZoneEndpoint(TestCase):
     """
     This class contains tests that check POST "/zones" endpoint.
     """
-    fixtures = ['test_zone.json', ]
+    fixtures: list = ['test_zone.json', ]
 
     def setUp(self) -> None:
         self.request_path: str = '/zones/'
-        self.existing_zone = DbZoneModel.objects.get(pk=TEST_ZONE_PK)
+        self.existing_zone: DbZoneModel = DbZoneModel.objects.get(pk=TEST_ZONE_PK)
 
     def test_create_new_zone(self):
         """
         The test checks the happy scenario of creating a user.
-        Expected behavior is 201 HTTP response with success message and zone_id.
+        Expected behavior is 201 HTTP response
+        with success message and zone_id.
         """
         request_data: dict = {
             'longitude': Decimal('25.4857'),
@@ -45,8 +46,9 @@ class TestCreateZoneEndpoint(TestCase):
 
     def test_create_new_zone_existing_zone(self):
         """
-        Tests the case when a zone exists. Expected behavior is
-        a response with 400 HTTP status and error message.
+        Tests the case when a zone exists.
+        Expected behavior is a response
+        with 400 HTTP status and error message.
         """
         request_data: dict = {
             'longitude': self.existing_zone.longitude,
@@ -67,7 +69,8 @@ class TestCreateZoneEndpoint(TestCase):
     def test_create_new_no_mandatory_fields(self):
         """
         Tests the case when request body is missing coordinates.
-        Expected behavior is a response with 400 HTTP status and error message.
+        Expected behavior is a response with
+        400 HTTP status and error message.
         """
         request_data: dict = {
             'name': 'test name',
@@ -77,7 +80,7 @@ class TestCreateZoneEndpoint(TestCase):
             data=request_data,
             content_type=DEFAULT_CONTENT_TYPE
         )
-        assert response.status_code == 400
+        assert response.status_code == HTTP_400_BAD_REQUEST
         assert response.data == {
             'status': 'error',
             'message': 'Request body is invalid.',
@@ -86,8 +89,9 @@ class TestCreateZoneEndpoint(TestCase):
 
     def test_create_new_zone_invalid_coordinates(self):
         """
-        Tests the case when a zone exists. Expected behavior is
-        a response with 400 HTTP status and error message.
+        Tests the case when a zone exists.
+        Expected behavior is a response with
+        400 HTTP status and error message.
         """
         request_data: dict = {
             'longitude': 'allalala',

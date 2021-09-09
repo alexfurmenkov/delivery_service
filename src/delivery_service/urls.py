@@ -7,12 +7,12 @@ more convenient than Django class based views.
 Also, the ViewSet class creates RESTful URLs under the hood
 which makes it even more convenient (see DRF docs for reference).
 """
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import DefaultRouter
 
 import delivery_service.views as delivery_service_views
 
 
-zones_router: SimpleRouter = SimpleRouter()
+zones_router: DefaultRouter = DefaultRouter()
 zones_router.register(r'zones', delivery_service_views.ZonesView, basename='zones')
 
 

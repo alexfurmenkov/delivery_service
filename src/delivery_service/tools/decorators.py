@@ -5,7 +5,7 @@ import functools
 
 from rest_framework.request import Request
 
-from delivery_service.tools.responses import ResponseValidationError
+from delivery_service.tools.responses import ResponseValidationError, ResponseNotFound
 
 
 def request_validation(serializer):
@@ -32,3 +32,24 @@ def request_validation(serializer):
         return _wrapper
 
     return request_validation_inner
+
+
+def ensure_existing_record(db_model_class):
+    """
+    The decorator is used in endpoints to check if
+    a record with requested id exists in the DB.
+    If the record is not found -> returns 404 response.
+    The use of this decorator allows to avoid
+    code duplication in endpoints handlers.
+    """
+    def ensure_existing_record_inner(handler):
+
+        @functools.wraps(handler)
+        def _wrapper(view, request: Request, pk: str, *args, **kwargs):
+            if not db_model_class.objects.filter(id=pk).exists():
+                return ResponseNotFound(message=f'Resource with id {pk} is not found.')
+            return handler(view, request, pk, *args, **kwargs)
+
+        return _wrapper
+
+    return ensure_existing_record_inner
