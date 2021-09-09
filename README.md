@@ -38,6 +38,10 @@ This is why a request to receive couriers by coordinates may return a list.
 * DB - PostgreSQL
 * Deployment - Docker, docker-compose
 
+High Level Design Diagram is attached below:
+
+![high_level_design_diagram](./high_level_design_diagram.png)
+
 ### Launching the project
 
 1. Create a Postgres DB called "delivery_service_db" on your computer.
