@@ -6,7 +6,7 @@ from rest_framework.viewsets import ViewSet
 
 from delivery_service.models import DbCarrierModel, DbZoneModel
 from delivery_service.serializers.model_serializers import DbCarrierModelSerializer
-from delivery_service.serializers.request_serializers import CreateNewCarrierSerializer
+from delivery_service.serializers.request_serializers import CreateNewCarrierSerializer, UpdateCarrierSerializer
 from delivery_service.tools.decorators import request_validation, ensure_existing_record
 from delivery_service.tools.responses import ResponseBadRequest, ResponseCreated, ResponseSuccess
 
@@ -60,3 +60,16 @@ class CarriersView(ViewSet):
             message='Carrier has been retrieved successfully.',
             response_data={'carrier': self.serializer_class(carrier).data}
         )
+
+    @request_validation(UpdateCarrierSerializer)
+    @ensure_existing_record(db_model_class)
+    def update(self, request: Request, pk=None) -> Response:
+        """
+        Endpoint that updates details of a carrier with the given id.
+        """
+        # update the carrier
+        carrier_to_update: DbCarrierModel = self.db_model_class.objects.get(id=pk)
+        carrier_to_update.update_db_record(request.data)
+
+        # return successful response
+        return ResponseSuccess(message=f'Carrier with id {pk} has been updated successfully.')
