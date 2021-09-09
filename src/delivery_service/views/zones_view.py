@@ -7,7 +7,7 @@ from rest_framework.viewsets import ViewSet
 
 from delivery_service.models import DbZoneModel
 from delivery_service.serializers.model_serializers import DbZoneModelSerializer
-from delivery_service.serializers.request_serializers import CreateNewZoneSerializer
+from delivery_service.serializers.request_serializers import CreateNewZoneSerializer, UpdateZoneSerializer
 from delivery_service.tools.decorators import request_validation, ensure_existing_record
 from delivery_service.tools.responses import ResponseBadRequest, ResponseCreated, ResponseSuccess
 
@@ -59,3 +59,13 @@ class ZonesView(ViewSet):
             message='Zone has been retrieved successfully.',
             response_data={'zone': self.serializer_class(zone).data}
         )
+
+    @request_validation(UpdateZoneSerializer)
+    @ensure_existing_record(db_model_class)
+    def update(self, request: Request, pk=None) -> Response:
+        """
+        Endpoint that updates a zone with the given id.
+        """
+        zone_to_update: DbZoneModel = self.db_model_class.objects.get(id=pk)
+        zone_to_update.update_db_record(request.data)
+        return ResponseSuccess(f'Zone with id {pk} has been updated successfully.')

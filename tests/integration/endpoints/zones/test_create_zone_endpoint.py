@@ -21,7 +21,7 @@ class TestCreateZoneEndpoint(TestCase):
 
     def test_create_new_zone(self):
         """
-        The test checks the happy scenario of creating a user.
+        The test checks the happy scenario of creating a zone.
         Expected behavior is 201 HTTP response
         with success message and zone_id.
         """
