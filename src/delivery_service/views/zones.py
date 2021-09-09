@@ -1,3 +1,7 @@
+"""
+This module is responsible for handling incoming messages
+HTTP requests to "/zones/" endpoints.
+"""
 from decimal import Decimal
 from typing import List
 
@@ -7,14 +11,24 @@ from rest_framework.viewsets import ViewSet
 
 from delivery_service.models import DbZoneModel
 from delivery_service.serializers.model_serializers import DbZoneModelSerializer
-from delivery_service.serializers.request_serializers import CreateNewZoneSerializer, UpdateZoneSerializer
-from delivery_service.tools.decorators import request_validation, ensure_existing_record
-from delivery_service.tools.responses import ResponseBadRequest, ResponseCreated, ResponseSuccess
+from delivery_service.serializers.request_serializers import (
+    CreateNewZoneSerializer,
+    UpdateZoneSerializer
+)
+from delivery_service.tools.decorators import (
+    request_validation,
+    ensure_existing_record
+)
+from delivery_service.tools.responses import (
+    ResponseBadRequest,
+    ResponseCreated,
+    ResponseSuccess
+)
 
 
 class ZonesView(ViewSet):
     """
-    This class handles HTTP requests on "/zones/" endpoints
+    The class implements CRUD functional for zones endpoints.
     """
     db_model_class = DbZoneModel
     serializer_class = DbZoneModelSerializer
@@ -33,7 +47,11 @@ class ZonesView(ViewSet):
             return ResponseBadRequest(message='Zone with given coordinates already exists.')
 
         # create new zone
-        new_zone: DbZoneModel = self.db_model_class.objects.create(longitude=longitude, latitude=latitude, name=name)
+        new_zone: DbZoneModel = self.db_model_class.objects.create(
+            longitude=longitude,
+            latitude=latitude,
+            name=name
+        )
         return ResponseCreated(
             message='New zone has been created successfully.',
             created_resource_id=new_zone.id

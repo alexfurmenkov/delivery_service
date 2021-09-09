@@ -1,3 +1,7 @@
+"""
+This module is responsible for handling incoming messages
+HTTP requests to "/carriers/" endpoints.
+"""
 from decimal import Decimal
 from typing import List
 
@@ -24,7 +28,7 @@ from delivery_service.tools.responses import (
 
 class CarriersView(ViewSet):
     """
-    This class handles HTTP requests on "/carriers/" endpoints
+    The class implements CRUD functional for carriers endpoints.
     """
     db_model_class = DbCarrierModel
     serializer_class = DbCarrierModelSerializer
@@ -91,7 +95,10 @@ class CarriersView(ViewSet):
             return ResponseNotFound('Carriers are not found.')
 
         # find carriers assigned to requested zone
-        requested_zone: DbZoneModel = DbZoneModel.objects.get(latitude=latitude, longitude=longitude)
+        requested_zone: DbZoneModel = DbZoneModel.objects.get(
+            latitude=latitude,
+            longitude=longitude
+        )
         carriers: List[DbCarrierModel] = DbCarrierModel.objects.filter(zone=requested_zone)
         return ResponseSuccess(
             message='Carriers have been found successfully.',
@@ -109,7 +116,9 @@ class CarriersView(ViewSet):
         carrier_to_update.update_db_record(request.data)
 
         # return successful response
-        return ResponseSuccess(message=f'Carrier with id {pk} has been updated successfully.')
+        return ResponseSuccess(
+            message=f'Carrier with id {pk} has been updated successfully.'
+        )
 
     @ensure_existing_record(db_model_class)
     def destroy(self, request: Request, pk=None) -> Response:
@@ -121,4 +130,6 @@ class CarriersView(ViewSet):
         carrier_to_delete.delete()
 
         # return successful response
-        return ResponseSuccess(message=f'Carrier with id {pk} has been deleted successfully.')
+        return ResponseSuccess(
+            message=f'Carrier with id {pk} has been deleted successfully.'
+        )
