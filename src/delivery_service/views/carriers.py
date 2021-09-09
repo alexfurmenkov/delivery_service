@@ -1,3 +1,5 @@
+from typing import List
+
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
@@ -5,8 +7,8 @@ from rest_framework.viewsets import ViewSet
 from delivery_service.models import DbCarrierModel, DbZoneModel
 from delivery_service.serializers.model_serializers import DbCarrierModelSerializer
 from delivery_service.serializers.request_serializers import CreateNewCarrierSerializer
-from delivery_service.tools.decorators import request_validation
-from delivery_service.tools.responses import ResponseBadRequest, ResponseCreated
+from delivery_service.tools.decorators import request_validation, ensure_existing_record
+from delivery_service.tools.responses import ResponseBadRequest, ResponseCreated, ResponseSuccess
 
 
 class CarriersView(ViewSet):
@@ -36,4 +38,25 @@ class CarriersView(ViewSet):
         return ResponseCreated(
             message='New carrier has been created successfully.',
             created_resource_id=new_carrier.id
+        )
+
+    def list(self, request: Request) -> Response:
+        """
+        Endpoint that lists all carriers.
+        """
+        carriers: List[DbCarrierModel] = self.db_model_class.objects.all()
+        return ResponseSuccess(
+            message='Carriers have been listed successfully.',
+            response_data={'carriers': self.serializer_class(carriers, many=True).data}
+        )
+
+    @ensure_existing_record(db_model_class)
+    def retrieve(self, request: Request, pk=None) -> Response:
+        """
+        Endpoint that gets a carriers by id.
+        """
+        carrier: DbCarrierModel = self.db_model_class.objects.get(id=pk)
+        return ResponseSuccess(
+            message='Carrier has been retrieved successfully.',
+            response_data={'carrier': self.serializer_class(carrier).data}
         )
