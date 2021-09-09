@@ -1,9 +1,14 @@
-from rest_framework.serializers import Serializer, CharField, IntegerField
+"""
+Serializer for PUT HTTP request on URL "/carriers/"
+"""
+from rest_framework.serializers import CharField, IntegerField
+
+from ..base_request_serializer import BaseRequestSerializer
 
 
-class UpdateCarrierSerializer(Serializer):
+class UpdateCarrierSerializer(BaseRequestSerializer):
     """
-    Serializer for PUT HTTP request on URL "/carriers/"
+    The class defines the fields that the request has to contain
     """
 
     zone = CharField(required=False, label='zone', max_length=1000)

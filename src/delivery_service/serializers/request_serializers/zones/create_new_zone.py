@@ -1,10 +1,15 @@
+"""
+Serializer for POST HTTP request on URL "/zones/"
+"""
 from rest_framework.fields import DecimalField
-from rest_framework.serializers import Serializer, CharField
+from rest_framework.serializers import CharField
+
+from ..base_request_serializer import BaseRequestSerializer
 
 
-class CreateNewZoneSerializer(Serializer):
+class CreateNewZoneSerializer(BaseRequestSerializer):
     """
-    Serializer for POST HTTP request on URL "/zones/"
+    The class defines the fields that the request has to contain
     """
 
     longitude = DecimalField(max_digits=8, decimal_places=4, label='longitude')

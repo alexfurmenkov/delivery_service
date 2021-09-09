@@ -1,3 +1,6 @@
+"""
+Serializer for DbCarrierModel class.
+"""
 from rest_framework.serializers import ModelSerializer
 
 from delivery_service.models import DbCarrierModel
@@ -5,7 +8,7 @@ from delivery_service.models import DbCarrierModel
 
 class DbCarrierModelSerializer(ModelSerializer):
     """
-    Serializer for DbCarrierModel class.
+    The serializer defines the fields that have to be serialized.
     """
 
     class Meta:

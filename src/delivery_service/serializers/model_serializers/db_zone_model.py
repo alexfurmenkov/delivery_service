@@ -1,3 +1,6 @@
+"""
+Serializer for DbZoneModel class.
+"""
 from rest_framework.serializers import ModelSerializer
 
 from delivery_service.models import DbZoneModel
@@ -5,7 +8,7 @@ from delivery_service.models import DbZoneModel
 
 class DbZoneModelSerializer(ModelSerializer):
     """
-    Serializer for DbZoneModel class.
+    The serializer defines the fields that have to be serialized.
     """
 
     class Meta:

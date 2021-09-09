@@ -1,10 +1,14 @@
+"""
+Serializer for GET HTTP request on URL "/carriers/search/"
+"""
 from rest_framework.fields import DecimalField
-from rest_framework.serializers import Serializer
+
+from ..base_request_serializer import BaseRequestSerializer
 
 
-class SearchCarrierSerializer(Serializer):
+class SearchCarrierSerializer(BaseRequestSerializer):
     """
-    Serializer for GET HTTP request on URL "/carriers/search/"
+    The class defines the fields that the request has to contain
     """
 
     longitude = DecimalField(max_digits=8, decimal_places=4, label='longitude')
