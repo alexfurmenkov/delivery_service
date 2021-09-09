@@ -1,14 +1,25 @@
+from decimal import Decimal
 from typing import List
 
+from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from delivery_service.models import DbCarrierModel, DbZoneModel
 from delivery_service.serializers.model_serializers import DbCarrierModelSerializer
-from delivery_service.serializers.request_serializers import CreateNewCarrierSerializer, UpdateCarrierSerializer
+from delivery_service.serializers.request_serializers import (
+    CreateNewCarrierSerializer,
+    UpdateCarrierSerializer,
+    SearchCarrierSerializer
+)
 from delivery_service.tools.decorators import request_validation, ensure_existing_record
-from delivery_service.tools.responses import ResponseBadRequest, ResponseCreated, ResponseSuccess
+from delivery_service.tools.responses import (
+    ResponseBadRequest,
+    ResponseCreated,
+    ResponseSuccess,
+    ResponseNotFound
+)
 
 
 class CarriersView(ViewSet):
@@ -59,6 +70,32 @@ class CarriersView(ViewSet):
         return ResponseSuccess(
             message='Carrier has been retrieved successfully.',
             response_data={'carrier': self.serializer_class(carrier).data}
+        )
+
+    @request_validation(SearchCarrierSerializer)
+    @action(detail=False, methods=['get'])
+    def search(self, request: Request) -> Response:
+        """
+        The endpoint searches carriers that serve in the zone with given coordinates.
+        Accepts latitude and longitude in query params and returns carriers.
+        One zone can be serviced by several carriers at the same time,
+        so the endpoint returns a list of carriers.
+        :param request: HTTP request
+        :return: Response object
+        """
+        latitude: Decimal = Decimal(request.query_params['latitude'])
+        longitude: Decimal = Decimal(request.query_params['longitude'])
+
+        # ensure that requested zone exists
+        if not DbZoneModel.objects.filter(latitude=latitude, longitude=longitude).exists():
+            return ResponseNotFound('Carriers are not found.')
+
+        # find carriers assigned to requested zone
+        requested_zone: DbZoneModel = DbZoneModel.objects.get(latitude=latitude, longitude=longitude)
+        carriers: List[DbCarrierModel] = DbCarrierModel.objects.filter(zone=requested_zone)
+        return ResponseSuccess(
+            message='Carriers have been found successfully.',
+            response_data={'carriers': self.serializer_class(carriers, many=True).data}
         )
 
     @request_validation(UpdateCarrierSerializer)
