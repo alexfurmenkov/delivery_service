@@ -67,5 +67,10 @@ After launching the DEV server auto-generated API docs can be found at `/docs/` 
 
 Simply execute `python src/manage.py test tests`.
 
+### Checking code quality with linters
+Pylint: run `pylint --load-plugins pylint_django src` from the project root directory.
+
+Flake8: run `flake8 src` from the project root directory.
+
 **A more detailed documentation can be found in "docs" directory. 
 It describes the DB schema, migrations and automated tests.** 
