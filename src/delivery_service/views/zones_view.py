@@ -69,3 +69,15 @@ class ZonesView(ViewSet):
         zone_to_update: DbZoneModel = self.db_model_class.objects.get(id=pk)
         zone_to_update.update_db_record(request.data)
         return ResponseSuccess(f'Zone with id {pk} has been updated successfully.')
+
+    @ensure_existing_record(db_model_class)
+    def destroy(self, request: Request, pk=None) -> Response:
+        """
+        Endpoint that deletes a zone.
+        """
+        # delete the post
+        zone_to_delete: DbZoneModel = self.db_model_class.objects.get(id=pk)
+        zone_to_delete.delete()
+
+        # return successful response
+        return ResponseSuccess(message=f'Zone with id {pk} has been deleted successfully.')
